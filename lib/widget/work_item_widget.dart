@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WorkItem extends StatelessWidget {
   final String title;
@@ -6,6 +7,7 @@ class WorkItem extends StatelessWidget {
   final String subtitle;
   final String description;
   final String? imageUrl;
+  final String? url;
   final double? imageHeight;
   final double? imageWidth;
   final Function()? onTap;
@@ -17,6 +19,7 @@ class WorkItem extends StatelessWidget {
     required this.subtitle,
     required this.description,
     this.imageUrl,
+    this.url,
     this.imageHeight,
     this.imageWidth,
     this.onTap,
@@ -24,10 +27,9 @@ class WorkItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasAction = onTap != null || (url != null && url!.isNotEmpty);
     return MouseRegion(
-      cursor: onTap != null
-          ? SystemMouseCursors.click
-          : SystemMouseCursors.basic,
+      cursor: hasAction ? SystemMouseCursors.click : SystemMouseCursors.basic,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -83,7 +85,16 @@ class WorkItem extends StatelessWidget {
           const SizedBox(height: 24),
           if (imageUrl != null)
             GestureDetector(
-              onTap: onTap,
+              onTap: () async {
+                if (onTap != null) {
+                  onTap!();
+                } else if (url != null && url!.isNotEmpty) {
+                  final uri = Uri.parse(url!);
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  }
+                }
+              },
               child: Container(
                 height: imageHeight ?? 450,
                 width: imageWidth ?? double.infinity,
