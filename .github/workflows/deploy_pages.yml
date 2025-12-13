@@ -22,16 +22,19 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: "3.22.0"
           channel: stable
 
-      - name: Disable Flutter analytics
-        run: flutter config --no-analytics
+      - name: Flutter config (CI safe)
+        run: |
+          flutter config --no-analytics
+          flutter config --no-cli-animations
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build web
-        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+        run: flutter build web --release --web-renderer=html --base-href "/${{ github.event.repository.name }}/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
