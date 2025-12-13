@@ -10,6 +10,7 @@ class WorksView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
@@ -18,17 +19,17 @@ class WorksView extends StatelessWidget {
             : screenWidth > 768
             ? 60.0
             : 24.0,
-        vertical: 60,
+        vertical: isMobile ? 40 : 60,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Featured Works",
             style: TextStyle(
-              fontSize: 48,
+              fontSize: isMobile ? 32 : 48,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1F2937),
+              color: const Color(0xFF1F2937),
               letterSpacing: -1,
             ),
           ),
@@ -36,12 +37,12 @@ class WorksView extends StatelessWidget {
           Text(
             "A selection of my recent projects",
             style: TextStyle(
-              fontSize: 20,
+              fontSize: isMobile ? 16 : 20,
               color: Colors.grey.shade600,
               fontWeight: FontWeight.w400,
             ),
           ),
-          const SizedBox(height: 50),
+          SizedBox(height: isMobile ? 30 : 50),
           ...controller.allWorks.map(
             (work) => WorkItem(
               imageUrl: work.imageUrl,

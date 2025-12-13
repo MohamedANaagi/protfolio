@@ -9,6 +9,7 @@ class ContactView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
@@ -17,17 +18,17 @@ class ContactView extends StatelessWidget {
             : screenWidth > 768
             ? 60.0
             : 24.0,
-        vertical: 60,
+        vertical: isMobile ? 40 : 60,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Get In Touch",
             style: TextStyle(
-              fontSize: 48,
+              fontSize: isMobile ? 32 : 48,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1F2937),
+              color: const Color(0xFF1F2937),
               letterSpacing: -1,
             ),
           ),
@@ -35,21 +36,21 @@ class ContactView extends StatelessWidget {
           Text(
             "I'd love to hear from you. Feel free to reach out through the contact information below.",
             style: TextStyle(
-              fontSize: 20,
+              fontSize: isMobile ? 16 : 20,
               color: Colors.grey.shade600,
               fontWeight: FontWeight.w400,
             ),
           ),
-          const SizedBox(height: 60),
+          SizedBox(height: isMobile ? 40 : 60),
 
           // Contact Content
-          _buildContactInfo(context),
+          _buildContactInfo(context, isMobile),
         ],
       ),
     );
   }
 
-  Widget _buildContactInfo(BuildContext context) {
+  Widget _buildContactInfo(BuildContext context, bool isMobile) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -61,8 +62,9 @@ class ContactView extends StatelessWidget {
           onTap: () => controller.sendEmail(),
           onCopy: () =>
               controller.copyToClipboard(controller.contact.email, context),
+          isMobile: isMobile,
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: isMobile ? 16 : 24),
         _contactItem(
           context: context,
           icon: Icons.phone,
@@ -71,18 +73,20 @@ class ContactView extends StatelessWidget {
           onTap: () => controller.makePhoneCall(),
           onCopy: () =>
               controller.copyToClipboard(controller.contact.phone, context),
+          isMobile: isMobile,
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: isMobile ? 16 : 24),
         _contactItem(
           context: context,
           icon: Icons.location_on,
           title: "Location",
           subtitle: controller.contact.location,
           onTap: null,
+          isMobile: isMobile,
         ),
-        const SizedBox(height: 40),
+        SizedBox(height: isMobile ? 30 : 40),
         Container(
-          padding: const EdgeInsets.all(32),
+          padding: EdgeInsets.all(isMobile ? 20 : 32),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -92,7 +96,7 @@ class ContactView extends StatelessWidget {
                 const Color(0xFF8B5CF6).withOpacity(0.1),
               ],
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(isMobile ? 16 : 20),
             border: Border.all(
               color: const Color(0xFF6366F1).withOpacity(0.2),
               width: 1,
@@ -101,19 +105,19 @@ class ContactView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Let's work together",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: isMobile ? 20 : 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1F2937),
+                  color: const Color(0xFF1F2937),
                 ),
               ),
               const SizedBox(height: 12),
               Text(
                 "I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: isMobile ? 14 : 16,
                   color: Colors.grey.shade700,
                   height: 1.6,
                 ),
@@ -132,12 +136,13 @@ class ContactView extends StatelessWidget {
     required String subtitle,
     required VoidCallback? onTap,
     VoidCallback? onCopy,
+    required bool isMobile,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(isMobile ? 16 : 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
         border: Border.all(color: Colors.grey.shade200, width: 1),
         boxShadow: [
           BoxShadow(
@@ -156,16 +161,20 @@ class ContactView extends StatelessWidget {
             child: GestureDetector(
               onTap: onTap,
               child: Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(isMobile ? 10 : 12),
                 decoration: BoxDecoration(
                   color: const Color(0xFF6366F1).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: const Color(0xFF6366F1), size: 24),
+                child: Icon(
+                  icon,
+                  color: const Color(0xFF6366F1),
+                  size: isMobile ? 20 : 24,
+                ),
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: isMobile ? 12 : 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +182,7 @@ class ContactView extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: isMobile ? 12 : 14,
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.w500,
                   ),
@@ -181,10 +190,10 @@ class ContactView extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: isMobile ? 14 : 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF1F2937),
+                    color: const Color(0xFF1F2937),
                   ),
                 ),
               ],
@@ -196,14 +205,14 @@ class ContactView extends StatelessWidget {
               child: GestureDetector(
                 onTap: onCopy,
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: EdgeInsets.all(isMobile ? 6 : 8),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Icons.copy,
-                    size: 18,
+                    size: isMobile ? 16 : 18,
                     color: Colors.grey.shade700,
                   ),
                 ),

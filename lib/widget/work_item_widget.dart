@@ -28,6 +28,9 @@ class WorkItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasAction = onTap != null || (url != null && url!.isNotEmpty);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+
     return MouseRegion(
       cursor: hasAction ? SystemMouseCursors.click : SystemMouseCursors.basic,
       child: Column(
@@ -35,19 +38,19 @@ class WorkItem extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 28,
+            style: TextStyle(
+              fontSize: isMobile ? 22 : 28,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1F2937),
+              color: const Color(0xFF1F2937),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: isMobile ? 8 : 12),
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 10 : 12,
+                  vertical: isMobile ? 4 : 6,
                 ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF6366F1).withOpacity(0.1),
@@ -55,41 +58,47 @@ class WorkItem extends StatelessWidget {
                 ),
                 child: Text(
                   date,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF6366F1),
+                    color: const Color(0xFF6366F1),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
+              SizedBox(width: isMobile ? 8 : 12),
+              Flexible(
+                child: Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: isMobile ? 14 : 16,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: isMobile ? 16 : 20),
           Text(
             description,
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: isMobile ? 14 : 16,
               height: 1.7,
-              color: Color(0xFF4B5563),
+              color: const Color(0xFF4B5563),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: isMobile ? 20 : 24),
           if (imageUrl != null)
             SizedBox(
               child: ClickableImage(
                 imageUrl: imageUrl!,
-                imageHeight: imageHeight,
+                imageHeight: isMobile
+                    ? (imageHeight ?? 300) * 0.7
+                    : imageHeight,
                 imageWidth: imageWidth,
                 hasAction: hasAction,
+                isMobile: isMobile,
                 onTap: () async {
                   if (onTap != null) {
                     onTap!();
@@ -105,9 +114,9 @@ class WorkItem extends StatelessWidget {
                 },
               ),
             ),
-          const SizedBox(height: 40),
+          SizedBox(height: isMobile ? 30 : 40),
           Divider(thickness: 1, color: Colors.grey.shade200, height: 1),
-          const SizedBox(height: 40),
+          SizedBox(height: isMobile ? 30 : 40),
         ],
       ),
     );
@@ -119,6 +128,7 @@ class ClickableImage extends StatefulWidget {
   final double? imageHeight;
   final double? imageWidth;
   final bool hasAction;
+  final bool isMobile;
   final VoidCallback onTap;
 
   const ClickableImage({
@@ -127,6 +137,7 @@ class ClickableImage extends StatefulWidget {
     this.imageHeight,
     this.imageWidth,
     required this.hasAction,
+    this.isMobile = false,
     required this.onTap,
   });
 
@@ -139,32 +150,34 @@ class _ClickableImageState extends State<ClickableImage> {
 
   @override
   Widget build(BuildContext context) {
+    final borderRadius = widget.isMobile ? 12.0 : 20.0;
+
     if (!widget.hasAction) {
       return Container(
-        height: widget.imageHeight ?? 450,
+        height: widget.imageHeight ?? (widget.isMobile ? 300 : 450),
         width: widget.imageWidth ?? double.infinity,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+              blurRadius: widget.isMobile ? 15 : 20,
+              offset: Offset(0, widget.isMobile ? 5 : 10),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(borderRadius),
           child: Image.asset(
             widget.imageUrl,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Container(
                 color: Colors.grey.shade200,
-                child: const Center(
+                child: Center(
                   child: Icon(
                     Icons.image_not_supported,
-                    size: 64,
+                    size: widget.isMobile ? 48 : 64,
                     color: Colors.grey,
                   ),
                 ),
@@ -185,30 +198,30 @@ class _ClickableImageState extends State<ClickableImage> {
           alignment: Alignment.bottomRight,
           children: [
             Container(
-              height: widget.imageHeight ?? 600,
+              height: widget.imageHeight ?? (widget.isMobile ? 400 : 600),
               width: widget.imageWidth ?? double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(borderRadius),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
+                    blurRadius: widget.isMobile ? 15 : 20,
+                    offset: Offset(0, widget.isMobile ? 5 : 10),
                   ),
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(borderRadius),
                 child: Image.asset(
                   widget.imageUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       color: Colors.grey.shade200,
-                      child: const Center(
+                      child: Center(
                         child: Icon(
                           Icons.image_not_supported,
-                          size: 64,
+                          size: widget.isMobile ? 48 : 64,
                           color: Colors.grey,
                         ),
                       ),
@@ -217,15 +230,15 @@ class _ClickableImageState extends State<ClickableImage> {
                 ),
               ),
             ),
-            if (_isHovered)
+            if (_isHovered && !widget.isMobile)
               Positioned(
-                right: 20,
-                bottom: 20,
+                right: widget.isMobile ? 12 : 20,
+                bottom: widget.isMobile ? 12 : 20,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: widget.isMobile ? 16 : 20,
+                    vertical: widget.isMobile ? 10 : 12,
                   ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF6366F1),
@@ -238,16 +251,20 @@ class _ClickableImageState extends State<ClickableImage> {
                       ),
                     ],
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.visibility, color: Colors.white, size: 20),
-                      SizedBox(width: 8),
+                      Icon(
+                        Icons.visibility,
+                        color: Colors.white,
+                        size: widget.isMobile ? 18 : 20,
+                      ),
+                      SizedBox(width: widget.isMobile ? 6 : 8),
                       Text(
                         "View Details",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: widget.isMobile ? 14 : 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
