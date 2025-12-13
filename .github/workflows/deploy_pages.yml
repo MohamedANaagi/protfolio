@@ -36,6 +36,14 @@ jobs:
       - name: Build web
         run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
 
+      - name: Copy .nojekyll file
+        run: |
+          if [ -f web/.nojekyll ]; then
+            cp web/.nojekyll build/web/.nojekyll
+          else
+            touch build/web/.nojekyll
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
