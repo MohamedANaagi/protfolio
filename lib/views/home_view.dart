@@ -83,7 +83,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
               children: [
                 // ===================== SECTION 1 (Hero Profile) =====================
                 Container(
-                  padding: const EdgeInsets.all(40),
+                  padding: EdgeInsets.all(isMobile ? 24 : 40),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -93,7 +93,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                         const Color(0xFF8B5CF6).withOpacity(0.05),
                       ],
                     ),
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(isMobile ? 16 : 24),
                     border: Border.all(
                       color: const Color(0xFF6366F1).withOpacity(0.1),
                       width: 1,
@@ -117,17 +117,17 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                         ),
                 ),
 
-                const SizedBox(height: 80),
+                SizedBox(height: isMobile ? 40 : 80),
 
                 // ===================== SECTION 2 (Featured Works Header) =====================
                 Row(
                   children: [
-                    const Text(
+                    Text(
                       "Featured Works",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: isMobile ? 22 : 28,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1F2937),
+                        color: const Color(0xFF1F2937),
                       ),
                     ),
                     const Spacer(),
@@ -157,9 +157,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                                   const Color(0xFF8B5CF6),
                                   _blinkAnimation.value * 0.3,
                                 ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 12,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: isMobile ? 16 : 20,
+                                  vertical: isMobile ? 10 : 12,
                                 ),
                               ),
                               child: Row(
@@ -168,7 +168,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                                   Text(
                                     "View All",
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: isMobile ? 14 : 16,
                                       fontWeight: FontWeight.w600,
                                       shadows: [
                                         Shadow(
@@ -181,10 +181,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: isMobile ? 2 : 4),
                                   Icon(
                                     Icons.arrow_forward,
-                                    size: 18,
+                                    size: isMobile ? 16 : 18,
                                     color: Color.lerp(
                                       const Color(0xFF6366F1),
                                       const Color(0xFF8B5CF6),
@@ -200,7 +200,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: isMobile ? 20 : 30),
 
                 // Featured Works Preview
                 ...controller.featuredWorks.map(
@@ -223,26 +223,30 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   }
 
   Widget _buildProfileImage() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+    final radius = isMobile ? 60.0 : 90.0;
+
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
           color: const Color(0xFF6366F1).withOpacity(0.3),
-          width: 4,
+          width: isMobile ? 3 : 4,
         ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF6366F1).withOpacity(0.2),
-            blurRadius: 20,
-            spreadRadius: 5,
+            blurRadius: isMobile ? 15 : 20,
+            spreadRadius: isMobile ? 3 : 5,
           ),
         ],
       ),
       child: CircleAvatar(
-        radius: 90,
+        radius: radius,
         backgroundColor: Colors.white,
         child: CircleAvatar(
-          radius: 85,
+          radius: radius - 5,
           backgroundImage: AssetImage(controller.profile.imagePath),
         ),
       ),
@@ -250,43 +254,49 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   }
 
   Widget _buildProfileContent(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           controller.profile.name,
-          style: const TextStyle(
-            fontSize: 48,
+          style: TextStyle(
+            fontSize: isMobile ? 32 : 48,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF1F2937),
+            color: const Color(0xFF1F2937),
             letterSpacing: -1,
           ),
         ),
         const SizedBox(height: 12),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 12 : 16,
+            vertical: isMobile ? 6 : 8,
+          ),
           decoration: BoxDecoration(
             color: const Color(0xFF6366F1).withOpacity(0.1),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
             controller.profile.title,
-            style: const TextStyle(
-              fontSize: 20,
-              color: Color(0xFF6366F1),
+            style: TextStyle(
+              fontSize: isMobile ? 16 : 20,
+              color: const Color(0xFF6366F1),
               fontWeight: FontWeight.w600,
             ),
           ),
         ),
         const SizedBox(height: 24),
-        SizedBox(
-          width: 600,
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
           child: Text(
             controller.profile.description,
-            style: const TextStyle(
-              fontSize: 18,
+            style: TextStyle(
+              fontSize: isMobile ? 16 : 18,
               height: 1.7,
-              color: Color(0xFF4B5563),
+              color: const Color(0xFF4B5563),
             ),
           ),
         ),
@@ -295,10 +305,13 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           cursor: SystemMouseCursors.click,
           child: ElevatedButton.icon(
             onPressed: () => controller.downloadResume(context),
-            icon: const Icon(Icons.download, size: 20),
+            icon: Icon(Icons.download, size: isMobile ? 18 : 20),
             label: const Text("Download Resume"),
             style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 24 : 32,
+                vertical: isMobile ? 14 : 18,
+              ),
             ),
           ),
         ),

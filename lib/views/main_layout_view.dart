@@ -9,6 +9,8 @@ class MainLayoutView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentRoute = GoRouterState.of(context).uri.path;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
 
     return Scaffold(
       // ====== AppBar ======
@@ -26,7 +28,11 @@ class MainLayoutView extends StatelessWidget {
             ],
           ),
           padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width > 1200 ? 120 : 40,
+            horizontal: screenWidth > 1200
+                ? 120
+                : screenWidth > 768
+                ? 40
+                : 16,
           ),
           child: Row(
             children: [
@@ -36,12 +42,12 @@ class MainLayoutView extends StatelessWidget {
                   onTap: () => context.go('/'),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: const Text(
-                      "Mohamed Ahmed",
+                    child: Text(
+                      isMobile ? "M. Ahmed" : "Mohamed Ahmed",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: Color(0xFF1F2937),
+                        fontSize: isMobile ? 18 : 22,
+                        color: const Color(0xFF1F2937),
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -50,7 +56,7 @@ class MainLayoutView extends StatelessWidget {
               ),
               const Spacer(),
               _navButton(context, "Works", '/works', currentRoute == '/works'),
-              const SizedBox(width: 8),
+              SizedBox(width: isMobile ? 4 : 8),
               _navButton(
                 context,
                 "Contact",
@@ -79,12 +85,16 @@ class MainLayoutView extends StatelessWidget {
     String route,
     bool isActive,
   ) {
+    final isMobile = MediaQuery.of(context).size.width < 768;
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () => context.go(route),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 12 : 20,
+            vertical: isMobile ? 10 : 12,
+          ),
           decoration: BoxDecoration(
             color: isActive
                 ? const Color(0xFF6366F1).withOpacity(0.1)
@@ -94,7 +104,7 @@ class MainLayoutView extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: isMobile ? 14 : 16,
               color: isActive
                   ? const Color(0xFF6366F1)
                   : const Color(0xFF4B5563),
