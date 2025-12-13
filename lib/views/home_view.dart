@@ -10,12 +10,13 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView>
-    with SingleTickerProviderStateMixin {
+class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   final HomeController controller = HomeController();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late AnimationController _blinkController;
+  late Animation<double> _blinkAnimation;
 
   @override
   void initState() {
@@ -37,12 +38,24 @@ class _HomeViewState extends State<HomeView>
           ),
         );
 
+    // Blinking animation controller
+    _blinkController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+
+    _blinkAnimation = Tween<double>(begin: 0.3, end: 1.0).animate(
+      CurvedAnimation(parent: _blinkController, curve: Curves.easeInOut),
+    );
+
     _animationController.forward();
+    _blinkController.repeat(reverse: true);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _blinkController.dispose();
     super.dispose();
   }
 
@@ -118,32 +131,72 @@ class _HomeViewState extends State<HomeView>
                       ),
                     ),
                     const Spacer(),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: TextButton(
-                        onPressed: () => context.go('/works'),
-                        style: TextButton.styleFrom(
-                          foregroundColor: const Color(0xFF6366F1),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 12,
+                    AnimatedBuilder(
+                      animation: _blinkAnimation,
+                      builder: (context, child) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFF6366F1,
+                                ).withOpacity(_blinkAnimation.value * 0.5),
+                                blurRadius: 15 * _blinkAnimation.value,
+                                spreadRadius: 3 * _blinkAnimation.value,
+                              ),
+                            ],
                           ),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "View All",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: TextButton(
+                              onPressed: () => context.go('/works'),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Color.lerp(
+                                  const Color(0xFF6366F1),
+                                  const Color(0xFF8B5CF6),
+                                  _blinkAnimation.value * 0.3,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "View All",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      shadows: [
+                                        Shadow(
+                                          color: const Color(0xFF6366F1)
+                                              .withOpacity(
+                                                _blinkAnimation.value * 0.6,
+                                              ),
+                                          blurRadius: 8 * _blinkAnimation.value,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    size: 18,
+                                    color: Color.lerp(
+                                      const Color(0xFF6366F1),
+                                      const Color(0xFF8B5CF6),
+                                      _blinkAnimation.value * 0.3,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(width: 4),
-                            Icon(Icons.arrow_forward, size: 18),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
