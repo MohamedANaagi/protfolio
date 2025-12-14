@@ -19,7 +19,7 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover, shrink-to-fit=no">
   
   <!-- Prevent iOS Safari from auto-detecting phone numbers -->
   <meta name="format-detection" content="telephone=no">
@@ -28,6 +28,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="protfolio">
+  <meta name="apple-touch-fullscreen" content="yes">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
   <link rel="apple-touch-icon" sizes="192x192" href="icons/Icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="icons/Icon-512.png">
@@ -87,11 +88,13 @@
     // iOS Safari compatibility fixes
     (function() {
       // Fix for iOS Safari base href issues
-      const baseHref = document.querySelector('base')?.getAttribute('href') || '/';
-      
-      // Ensure proper base href for iOS
-      if (!baseHref.endsWith('/')) {
-        document.querySelector('base').setAttribute('href', baseHref + '/');
+      const baseElement = document.querySelector('base');
+      if (baseElement) {
+        const baseHref = baseElement.getAttribute('href') || '/';
+        // Ensure proper base href for iOS
+        if (baseHref && !baseHref.endsWith('/') && baseHref !== '$FLUTTER_BASE_HREF') {
+          baseElement.setAttribute('href', baseHref + '/');
+        }
       }
 
       // Prevent zoom on double tap for iOS
@@ -104,14 +107,6 @@
         lastTouchEnd = now;
       }, false);
 
-      // Fix for iOS Safari service worker issues
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          // Service worker registration is handled by Flutter
-          // This is just to ensure compatibility
-        });
-      }
-
       // Hide loading indicator when Flutter app loads
       window.addEventListener('flutter-first-frame', function() {
         const loading = document.getElementById('loading');
@@ -123,36 +118,28 @@
       // Fallback: hide loading after timeout
       setTimeout(function() {
         const loading = document.getElementById('loading');
-        if (loading) {
+        if (loading && !loading.classList.contains('hidden')) {
           loading.classList.add('hidden');
         }
-      }, 5000);
+      }, 10000);
+
+      // Enhanced error handling for iOS
+      window.addEventListener('error', function(e) {
+        console.error('Global error:', e.error, e.message, e.filename, e.lineno);
+        const loading = document.getElementById('loading');
+        if (loading) {
+          loading.innerHTML = '<div style="color: white; text-align: center; padding: 20px; font-size: 14px;">Error loading app. Please refresh the page.</div>';
+        }
+      }, true);
+
+      // Handle unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(e) {
+        console.error('Unhandled promise rejection:', e.reason);
+      });
     })();
   </script>
   
-  <!-- Flutter bootstrap script -->
-  <script>
-    // Enhanced error handling for iOS
-    window.addEventListener('error', function(e) {
-      console.error('Global error:', e.error);
-      const loading = document.getElementById('loading');
-      if (loading) {
-        loading.innerHTML = '<div style="color: white; text-align: center; padding: 20px;">Error loading app. Please refresh.</div>';
-      }
-    });
-
-    // Load Flutter bootstrap
-    var script = document.createElement('script');
-    script.src = 'flutter_bootstrap.js';
-    script.async = true;
-    script.onerror = function() {
-      console.error('Failed to load flutter_bootstrap.js');
-      const loading = document.getElementById('loading');
-      if (loading) {
-        loading.innerHTML = '<div style="color: white; text-align: center; padding: 20px;">Failed to load application. Please check your connection and refresh.</div>';
-      }
-    };
-    document.body.appendChild(script);
-  </script>
+  <!-- Flutter bootstrap script - Direct load for iOS Safari compatibility -->
+  <script src="flutter_bootstrap.js" type="application/javascript" async></script>
 </body>
 </html>
