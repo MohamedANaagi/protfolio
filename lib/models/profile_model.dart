@@ -22,6 +22,6 @@ class ProfileModel {
         "I enjoy transforming ideas into functional products that deliver real value to users.",
     imagePath: "assets/images/d.jpeg",
     resumeUrl:
-        'https://drive.google.com/file/d/1_kt19M4K-bMYT2wcNyZ9BmiFQbN7Bw8K/view?usp=drive_link',
+        'https://drive.google.com/file/d/1hIrmtLoavErVho7a3ZnZDHRL4S1vIalG/view?usp=drive_link',
   );
 }
