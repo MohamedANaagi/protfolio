@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -29,6 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="protfolio">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/Icon-512.png">
   
   <!-- Android/Chrome meta tags -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -54,21 +56,103 @@
       margin: 0;
       padding: 0;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    /* Loading indicator for iOS */
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #0175C2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .loading.hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
+  <!-- Loading indicator -->
+  <div id="loading" class="loading">
+    <div style="color: white; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">Loading...</div>
+  </div>
+
   <script>
-    // Prevent zoom on double tap for iOS
-    let lastTouchEnd = 0;
-    document.addEventListener('touchend', function (event) {
-      const now = Date.now();
-      if (now - lastTouchEnd <= 300) {
-        event.preventDefault();
+    // iOS Safari compatibility fixes
+    (function() {
+      // Fix for iOS Safari base href issues
+      const baseHref = document.querySelector('base')?.getAttribute('href') || '/';
+      
+      // Ensure proper base href for iOS
+      if (!baseHref.endsWith('/')) {
+        document.querySelector('base').setAttribute('href', baseHref + '/');
       }
-      lastTouchEnd = now;
-    }, false);
+
+      // Prevent zoom on double tap for iOS
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function (event) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+
+      // Fix for iOS Safari service worker issues
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          // Service worker registration is handled by Flutter
+          // This is just to ensure compatibility
+        });
+      }
+
+      // Hide loading indicator when Flutter app loads
+      window.addEventListener('flutter-first-frame', function() {
+        const loading = document.getElementById('loading');
+        if (loading) {
+          loading.classList.add('hidden');
+        }
+      });
+
+      // Fallback: hide loading after timeout
+      setTimeout(function() {
+        const loading = document.getElementById('loading');
+        if (loading) {
+          loading.classList.add('hidden');
+        }
+      }, 5000);
+    })();
   </script>
-  <script src="flutter_bootstrap.js" async></script>
+  
+  <!-- Flutter bootstrap script -->
+  <script>
+    // Enhanced error handling for iOS
+    window.addEventListener('error', function(e) {
+      console.error('Global error:', e.error);
+      const loading = document.getElementById('loading');
+      if (loading) {
+        loading.innerHTML = '<div style="color: white; text-align: center; padding: 20px;">Error loading app. Please refresh.</div>';
+      }
+    });
+
+    // Load Flutter bootstrap
+    var script = document.createElement('script');
+    script.src = 'flutter_bootstrap.js';
+    script.async = true;
+    script.onerror = function() {
+      console.error('Failed to load flutter_bootstrap.js');
+      const loading = document.getElementById('loading');
+      if (loading) {
+        loading.innerHTML = '<div style="color: white; text-align: center; padding: 20px;">Failed to load application. Please check your connection and refresh.</div>';
+      }
+    };
+    document.body.appendChild(script);
+  </script>
 </body>
 </html>
