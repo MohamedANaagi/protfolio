@@ -39,7 +39,7 @@ class WorkModel {
 
       imageUrl: "assets/images/3.jpeg",
       url:
-          "https://drive.google.com/drive/folders/1lb0QXEEBmEDBTHh7-fcQMOmi8IuVRWM1?usp=drive_link", // يمكنك إضافة الرابط هنا
+          "https://drive.google.com/drive/folders/142mjegxjS1SIkmsgXMB8QBgMCM8Rtt-9?usp=drive_link", // يمكنك إضافة الرابط هنا
     ),
     WorkModel(
       id: '2',
