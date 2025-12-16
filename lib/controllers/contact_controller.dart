@@ -20,6 +20,13 @@ class ContactController {
     }
   }
 
+  Future<void> openLinkedIn() async {
+    final uri = Uri.parse(contact.linkedInUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   Future<void> copyToClipboard(String text, BuildContext context) async {
     await Clipboard.setData(ClipboardData(text: text));
     if (context.mounted) {

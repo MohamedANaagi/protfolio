@@ -84,6 +84,19 @@ class ContactView extends StatelessWidget {
           onTap: null,
           isMobile: isMobile,
         ),
+        SizedBox(height: isMobile ? 16 : 24),
+        _contactItem(
+          context: context,
+          icon: Icons.work_outline,
+          title: "LinkedIn",
+          subtitle: "Connect with me on LinkedIn",
+          onTap: () => controller.openLinkedIn(),
+          onCopy: () => controller.copyToClipboard(
+            controller.contact.linkedInUrl,
+            context,
+          ),
+          isMobile: isMobile,
+        ),
         SizedBox(height: isMobile ? 30 : 40),
         Container(
           padding: EdgeInsets.all(isMobile ? 20 : 32),

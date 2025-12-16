@@ -55,14 +55,14 @@ class WorkModel {
 
     WorkModel(
       id: '2',
-      title: "Mobile App Redesign",
+      title: "E-Commerce App",
       date: "2024",
-      subtitle: "App / UX Case Study",
+      subtitle: "Flutter • E-Commerce App",
       description:
-          "More placeholder text for the second featured work item. Describe your case study or app redesign here.",
+          "A mobile shopping app that enables users to browse products, manage carts, complete secure checkouts, track orders in real time, and receive notifications. Built with BLoC (Cubit), RESTful API integration, Dio, Sqflite, Cache, and Firebase to ensure a smooth and scalable user experience.",
       imageUrl: "assets/images/041fbc18-1b4c-45d6-8a60-943db379779e.JPG",
       url:
-          "https://drive.google.com/drive/folders/1lb0QXEEBmEDBTHh7-fcQMOmi8IuVRWM1?usp=drive_link", // يمكنك إضافة الرابط هنا
+          "https://www.linkedin.com/posts/mohamed-nagi-920034250_eabrcommerceabrapplication-apis-cache-activity-7249055885887500292-XwVQ?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAD3w0ygBDN_1YiuBwiqtormDCAaJAU_hDkE", // يمكنك إضافة الرابط هنا
     ),
   ];
 }
