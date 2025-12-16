@@ -41,6 +41,17 @@ class WorkModel {
       url:
           "https://drive.google.com/drive/folders/1H4aJX7etf0dlc6Cpc_3IxFgcf70akAjn?usp=drive_link",
     ),
+    WorkModel(
+      id: '4',
+      title: "Pos-High",
+      date: "2024",
+      subtitle: "Flutter • Cashier & Kitchen Management System",
+      description:
+          "A comprehensive Point of Sale system for restaurants, built with Flutter, featuring three interconnected apps (Main Cashier, Sub Cashier, and Kitchen Display System). It supports real-time order synchronization, RESTful API integration, offline local storage, and LAN-based device communication, ensuring efficient workflow coordination and reduced operational errors.",
+      imageUrl: "assets/images/WhatsApp Image 1447-06-25 at 06.56.00 (2).jpeg",
+      url:
+          "https://drive.google.com/drive/folders/1iF39txBToJGgrWWpZWRmfG0ygewetvcm?usp=drive_link",
+    ),
 
     WorkModel(
       id: '2',
