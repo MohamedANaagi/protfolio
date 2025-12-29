@@ -24,7 +24,12 @@ class WorkModel {
       date: "2025",
       subtitle: "Flutter • Teacher Management System",
       description:
-          "A lightweight todo application built with React Native, \nExpo, Convex, and TypeScript, \nfocusing on real-time data syncing and clean component-based UI design.",
+          "TeacherZone is a comprehensive educational mobile application built using Flutter to streamline the learning experience for teachers and students.\n"
+          "The app features a secure authentication system with role-based access for admins, teachers, and students.\n"
+          "It leverages Firebase for user management, course data, and progress tracking.\n"
+          "Bunny.net is integrated for high-performance, secure video streaming of educational content.\n"
+          "Students can track their video progress, while teachers manage courses efficiently.\n"
+          "The app delivers a smooth, responsive UI designed for scalability and future growth.",
 
       imageUrl: "assets/images/44.png",
       url:
