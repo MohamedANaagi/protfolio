@@ -20,6 +20,18 @@ class WorkModel {
   static const List<WorkModel> defaultWorks = [
     WorkModel(
       id: '3',
+      title: "TecherZone",
+      date: "2025",
+      subtitle: "Flutter • Teacher Management System",
+      description:
+          "A lightweight todo application built with React Native, \nExpo, Convex, and TypeScript, \nfocusing on real-time data syncing and clean component-based UI design.",
+
+      imageUrl: "assets/images/44.png",
+      url:
+          "https://drive.google.com/drive/folders/1U26DumpE5RGgdj8Rx7mvqT5xIfuDP9Fw?usp=sharing", // يمكنك إضافة الرابط هنا
+    ),
+    WorkModel(
+      id: '3',
       title: "Todo App — React Native & Convex",
       date: "2025",
       subtitle: "Mobile Development Project",
